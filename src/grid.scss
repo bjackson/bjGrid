@@ -1,0 +1,23 @@
+@import "~bootstrap/scss/bootstrap.scss";
+
+@-webkit-keyframes demo {
+  0% {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+  22% {
+    background-color: rgba(0, 0, 0, 0.15);
+  }
+  77% {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  100% {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+}
+
+.demo {
+  -webkit-animation-name: demo;
+  -webkit-animation-duration: 1500ms;
+  -webkit-animation-iteration-count: 1;
+  -webkit-animation-timing-function: ease-in-out;
+}
