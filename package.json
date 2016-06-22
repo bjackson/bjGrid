@@ -1,7 +1,7 @@
 {
   "name": "bjgrid",
   "version": "0.0.0",
-  "description": "Bjgrid Component",
+  "description": "A grid focused on realtime updates with sorting and grouping.",
   "author": {
     "name": "Brett Jackson",
     "email": "brett@brettjackson.org"
