@@ -22,6 +22,7 @@ class Row extends React.Component {
       style: React.PropTypes.object,
       data: React.PropTypes.object,
       columnOptions: React.PropTypes.object,
+      hiddenColumns: React.PropTypes.arrayOf(React.PropTypes.string),
     };
   }
 
@@ -52,6 +53,10 @@ class Row extends React.Component {
 
   render() {
     const columns = _.keys(this.props.data).map(col => {
+      if (this.props.hiddenColumns.includes(col)) {
+        return null;
+      }
+
       let toDisplay;
       if (isNumeric(this.props.data[col])) {
         toDisplay = (<NumberField redOrGreen={ this.props.columnOptions[col].redOrGreen }>

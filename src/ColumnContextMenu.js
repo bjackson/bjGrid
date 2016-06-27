@@ -10,7 +10,7 @@ const containerStyles = {
   margin: '0 auto',
   padding: '0 24px',
   maxWidth: '960px',
-  // position: 'absolute',
+  position: 'absolute',
   backgroundColor: '#fff',
   border: 'solid 1px #dfdfdf',
   width: '150px',
@@ -30,32 +30,41 @@ const itemStyles = {
 export default class ColumnContextMenu extends React.Component {
   static propTypes() {
     return {
-      mouseLeft: React.PropTypes.func.isRequired,
       colName: React.PropTypes.string.isRequired,
+      removeColumn: React.PropTypes.func.isRequired,
     };
   }
-  onMouseLeave() {
-    // noinspection JSUnresolvedFunction
-    this.props.mouseLeft();
-  }
 
-  getMenuItems() {
-    const menuItems = [
+  static getMenuItemEnums() {
+    return [
       {
+        optionId: 'removeColumn',
         text: 'Remove column',
       },
       {
+        optionId: 'addColumn',
         text: 'Add column',
       },
       {
+        optionId: 'groupBy',
         text: 'Group by column',
       },
     ];
+  }
+
+  onOptionClick(opts) {
+    if (opts.key === 'removeColumn') {
+      this.props.removeColumn();
+    }
+  }
+
+  getMenuItems() {
+    const menuItems = ColumnContextMenu.getMenuItemEnums();
 
     return menuItems.map(item => {
       return (
         <MenuItem
-          key={ item.text }
+          key={ item.optionId }
           style={ itemStyles }
         >
           { item.text }
@@ -66,15 +75,13 @@ export default class ColumnContextMenu extends React.Component {
 
   render() {
     return (
-      <container
-        style={ containerStyles }
+      <Menu
+        style={ { ...menuStyles, ...containerStyles } }
         className="columnContextMenu"
-        onMouseLeave={ () => this.onMouseLeave() }
+        onClick={ this.onOptionClick.bind(this) }
       >
-        <Menu menuStyles={ menuStyles }>
-          { this.getMenuItems() }
-        </Menu>
-      </container>
+        { this.getMenuItems() }
+      </Menu>
     );
   }
 }

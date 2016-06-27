@@ -28,6 +28,7 @@ const Grid = React.createClass({
       sortBy: 'symbol',
       direction: 'asc',
       showMenuFor: null,
+      hiddenColumns: [],
     };
   },
 
@@ -35,7 +36,7 @@ const Grid = React.createClass({
     if (this.state.showMenuFor === colName) {
       return (<ColumnContextMenu
         colName={ colName }
-        mouseLeft={ () => this.closeMenu() }
+        removeColumn={ () => this.removeColumn(colName) }
       />);
     }
 
@@ -79,8 +80,19 @@ const Grid = React.createClass({
     });
   },
 
-  render() {
-    let headers = _.keys(this.props.dataSource[0]).map(colName => {
+  removeColumn(colName) {
+    console.log(`removing col: ${colName}`);
+    this.setState({
+      hiddenColumns: this.state.hiddenColumns.concat(colName),
+    });
+  },
+
+  getHeaders() {
+    return _.keys(this.props.dataSource[0]).map(colName => {
+      if (this.state.hiddenColumns.includes(colName)) {
+        return null;
+      }
+
       let sortIcon;
 
       if (this.isSortedColumn(colName)) {
@@ -98,21 +110,23 @@ const Grid = React.createClass({
         : colName;
 
       return (
-      <th key={ `header-${colName}` }>
-        { columnTitle }
-        <Icon name={ sortIcon }
-          style={ sortIconStyles }
-          onClick={ () => this.colSortClicked(colName) }
-        />
-        <Icon
-          name="bars"
-          style={ sortIconStyles }
-          onClick={ () => this.toggleMenu(colName) }
-        />
-        { this.getMenuIfToBeShown(colName) }
-      </th>);
+        <th key={ `header-${colName}` }>
+            { columnTitle }
+              <Icon name={ sortIcon }
+                style={ sortIconStyles }
+                onClick={ () => this.colSortClicked(colName) }
+              />
+              <Icon
+                name="bars"
+                style={ sortIconStyles }
+                onClick={ () => this.toggleMenu(colName) }
+              />
+            { this.getMenuIfToBeShown(colName) }
+        </th>);
     });
+  },
 
+  render() {
     const body = this.props.dataSource
       .sort((a, b) => {
         let aa = a;
@@ -141,6 +155,7 @@ const Grid = React.createClass({
           <Row
             key={ item[this.props.rowKey] }
             data={ item }
+            hiddenColumns={ this.state.hiddenColumns }
             columnOptions={ this.props.options.columnOptions }
           />
         );
@@ -154,7 +169,7 @@ const Grid = React.createClass({
         >
           <thead>
           <tr>
-            { headers }
+            { this.getHeaders() }
           </tr>
           </thead>
           <tbody>
