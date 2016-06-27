@@ -2,7 +2,7 @@
  * Created by brett on 6/19/16.
  */
 import React from 'react';
-import Menu, { MenuItem } from 'rc-menu';
+import Menu, { SubMenu, MenuItem } from 'rc-menu';
 import './columnContextMenu.scss';
 
 const containerStyles = {
@@ -32,10 +32,24 @@ export default class ColumnContextMenu extends React.Component {
     return {
       colName: React.PropTypes.string.isRequired,
       removeColumn: React.PropTypes.func.isRequired,
+      addColumn: React.PropTypes.func.isRequired,
+      hiddenColumns: React.PropTypes.arrayOf(React.PropTypes.string),
     };
   }
 
-  static getMenuItemEnums() {
+  getAddColumnItems() {
+    return this.props.hiddenColumns.map(col => {
+      return (
+        <MenuItem
+          key={ col }
+        >
+          { col }
+        </MenuItem>
+      );
+    });
+  }
+
+  getMenuItemEnums() {
     return [
       {
         optionId: 'removeColumn',
@@ -44,6 +58,8 @@ export default class ColumnContextMenu extends React.Component {
       {
         optionId: 'addColumn',
         text: 'Add column',
+        isSubMenu: true,
+        subMenuItems: this.getAddColumnItems(),
       },
       {
         optionId: 'groupBy',
@@ -53,15 +69,32 @@ export default class ColumnContextMenu extends React.Component {
   }
 
   onOptionClick(opts) {
+    console.log(opts);
     if (opts.key === 'removeColumn') {
       this.props.removeColumn();
+    }
+    if (opts.keyPath.length > 1) {
+      if (opts.keyPath.slice(-1)[0] === 'addColumn') {
+        this.props.addColumn(opts.key);
+      }
     }
   }
 
   getMenuItems() {
-    const menuItems = ColumnContextMenu.getMenuItemEnums();
+    const menuItems = this.getMenuItemEnums();
 
     return menuItems.map(item => {
+      if (item.isSubMenu) {
+        return (
+          <SubMenu
+            title={ item.text }
+            key={ item.optionId }
+          >
+            { this.getAddColumnItems() }
+          </SubMenu>
+        );
+      }
+
       return (
         <MenuItem
           key={ item.optionId }

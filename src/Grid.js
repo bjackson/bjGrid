@@ -36,7 +36,9 @@ const Grid = React.createClass({
     if (this.state.showMenuFor === colName) {
       return (<ColumnContextMenu
         colName={ colName }
+        addColumn={ this.addColumn }
         removeColumn={ () => this.removeColumn(colName) }
+        hiddenColumns={ this.state.hiddenColumns }
       />);
     }
 
@@ -84,6 +86,14 @@ const Grid = React.createClass({
     console.log(`removing col: ${colName}`);
     this.setState({
       hiddenColumns: this.state.hiddenColumns.concat(colName),
+    });
+  },
+
+  addColumn(colName) {
+    console.log(`adding col: ${colName}`);
+    console.log(this.state.hiddenColumns.filter(col => col !== colName));
+    this.setState({
+      hiddenColumns: this.state.hiddenColumns.filter(col => col !== colName),
     });
   },
 
