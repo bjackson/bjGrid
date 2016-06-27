@@ -6,10 +6,6 @@ import { Icon } from 'react-fa';
 import '../node_modules/font-awesome/css/font-awesome.css';
 import './grid.scss';
 
-const theadStyles = {
-  //  paddingLeft: '10px',
-};
-
 const gridStyles = {
 
 };
@@ -24,6 +20,7 @@ const Grid = React.createClass({
     style: React.PropTypes.object,
     dataSource: React.PropTypes.array,
     options: React.PropTypes.object,
+    rowKey: React.PropTypes.string,
   },
 
   getInitialState() {
@@ -34,16 +31,15 @@ const Grid = React.createClass({
     };
   },
 
-  isSortedColumn(colName) {
-    return colName === this.state.sortBy;
-  },
-
-  colSortClicked(colName) {
-    if (colName === this.state.sortBy) {
-      this.sortByColumn(colName, this.state.direction === 'asc' ? 'desc' : 'asc');
-    } else {
-      this.sortByColumn(colName, 'asc');
+  getMenuIfToBeShown(colName) {
+    if (this.state.showMenuFor === colName) {
+      return (<ColumnContextMenu
+        colName={ colName }
+        mouseLeft={ () => this.closeMenu() }
+      />);
     }
+
+    return null;
   },
 
   toggleMenu(colName) {
@@ -58,15 +54,16 @@ const Grid = React.createClass({
     }
   },
 
-  getMenuIfToBeShown(colName) {
-    if (this.state.showMenuFor === colName) {
-      return (<ColumnContextMenu
-        colName={ colName }
-        mouseLeft={ () => this.closeMenu() }
-      />);
+  colSortClicked(colName) {
+    if (colName === this.state.sortBy) {
+      this.sortByColumn(colName, this.state.direction === 'asc' ? 'desc' : 'asc');
+    } else {
+      this.sortByColumn(colName, 'asc');
     }
+  },
 
-    return null;
+  isSortedColumn(colName) {
+    return colName === this.state.sortBy;
   },
 
   sortByColumn(colName, direction = 'asc') {
@@ -101,7 +98,7 @@ const Grid = React.createClass({
         : colName;
 
       return (
-      <th key={ colName } style={ theadStyles }>
+      <th key={ `header-${colName}` }>
         { columnTitle }
         <Icon name={ sortIcon }
           style={ sortIconStyles }
@@ -141,7 +138,8 @@ const Grid = React.createClass({
       })
       .map(item => {
         return (
-          <Row key={ JSON.stringify(item) }
+          <Row
+            key={ item[this.props.rowKey] }
             data={ item }
             columnOptions={ this.props.options.columnOptions }
           />
@@ -169,12 +167,5 @@ const Grid = React.createClass({
     );
   },
 });
-
-Grid.propTypes = {
-  children: React.PropTypes.string,
-  style: React.PropTypes.object,
-  dataSource: React.PropTypes.array,
-  options: React.PropTypes.object,
-};
 
 export default Grid;

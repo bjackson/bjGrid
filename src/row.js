@@ -5,13 +5,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import _ from 'lodash';
+
 import NumberField from './NumberField';
+import Cell from './Cell';
 
-
-const rowStyles = {
-  padding: '5px',
-  borderTop: '1px solid #ddd',
-};
 
 function isNumeric(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
@@ -28,8 +25,28 @@ class Row extends React.Component {
     };
   }
 
-  componentDidUpdate() {
+  constructor(props) {
+    super(props);
+    this.state = {
+      classNames: null,
+    };
+  }
+
+  componentDidMount() {
+    this.addAnimation();
+  }
+
+  componentDidUpdate(prevProps) {
     const el = ReactDOM.findDOMNode(this);
+    el.classList.remove('demo');
+    if (!_.isEqual(prevProps, this.props)) {
+      this.addAnimation();
+    }
+  }
+
+  addAnimation() {
+    const el = ReactDOM.findDOMNode(this);
+    el.classList.remove('demo');
     el.classList.add('demo');
   }
 
@@ -44,14 +61,14 @@ class Row extends React.Component {
         toDisplay = this.props.data[col];
       }
       return (
-        <td key={ col } style={ { ...rowStyles, ...this.props.style } }>
+        <Cell key={ col } style={ this.props.style }>
           { toDisplay }
-        </td>
+        </Cell>
       );
     });
 
     return (
-      <tr style={ { ...rowStyles, ...this.props.style } } >
+      <tr style={ this.props.style }>
         { columns }
       </tr>
     );

@@ -1,3 +1,5 @@
 src
 .babelrc
+*.log
+.idea
 chromeProfiles/

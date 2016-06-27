@@ -66,7 +66,11 @@ storiesOf('Grid', module)
 
       render() {
         return (
-          <Grid dataSource={ this.state.dataSource } options={ this.state.options } />
+          <Grid
+            dataSource={ this.state.dataSource }
+            options={ this.state.options }
+            rowKey="symbol"
+          />
         );
       },
     });

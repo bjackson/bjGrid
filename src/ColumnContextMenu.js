@@ -10,7 +10,7 @@ const containerStyles = {
   margin: '0 auto',
   padding: '0 24px',
   maxWidth: '960px',
-  position: 'absolute',
+  // position: 'absolute',
   backgroundColor: '#fff',
   border: 'solid 1px #dfdfdf',
   width: '150px',
@@ -18,8 +18,13 @@ const containerStyles = {
 
 const menuStyles = {
   listStyle: 'none',
-  padding: '0',
+  padding: 0,
   boxSizing: 'border-box',
+};
+
+const itemStyles = {
+  borderBottom: 'solid 1px #ccc',
+  padding: 10,
 };
 
 export default class ColumnContextMenu extends React.Component {
@@ -34,6 +39,31 @@ export default class ColumnContextMenu extends React.Component {
     this.props.mouseLeft();
   }
 
+  getMenuItems() {
+    const menuItems = [
+      {
+        text: 'Remove column',
+      },
+      {
+        text: 'Add column',
+      },
+      {
+        text: 'Group by column',
+      },
+    ];
+
+    return menuItems.map(item => {
+      return (
+        <MenuItem
+          key={ item.text }
+          style={ itemStyles }
+        >
+          { item.text }
+        </MenuItem>
+      );
+    });
+  }
+
   render() {
     return (
       <container
@@ -42,9 +72,7 @@ export default class ColumnContextMenu extends React.Component {
         onMouseLeave={ () => this.onMouseLeave() }
       >
         <Menu menuStyles={ menuStyles }>
-          <MenuItem>Item 1</MenuItem>
-          <MenuItem>Item 2</MenuItem>
-          <MenuItem>Item 3</MenuItem>
+          { this.getMenuItems() }
         </Menu>
       </container>
     );
