@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import Row from './row';
+import Row from './Row';
 import ColumnContextMenu from './ColumnContextMenu';
 import { Icon } from 'react-fa';
 import '../node_modules/font-awesome/css/font-awesome.css';
@@ -172,22 +172,22 @@ const Grid = React.createClass({
       });
 
     return (
-      <div className="container container-fluid">
-        <table
-          className="table table-hover"
-          style={{ ...gridStyles, ...this.props.style }}
-        >
-          <thead>
-          <tr>
-            { this.getHeaders() }
-          </tr>
-          </thead>
-          <tbody>
-          { body }
-          </tbody>
-
-          { this.props.children }
-        </table>
+      <div className="container-fluid">
+        <div className="table-responsive">
+          <table
+            className="table table-hover"
+            style={{ ...gridStyles, ...this.props.style }}
+          >
+            <thead>
+            <tr>
+              { this.getHeaders() }
+            </tr>
+            </thead>
+            <tbody>
+            { body }
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   },
